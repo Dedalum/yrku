@@ -1,1 +1,4 @@
 *.swp
+deploy/.env
+deploy/mysql/data
+deploy/mysql/entrypoint_scripts

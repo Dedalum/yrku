@@ -1,0 +1,12 @@
+version: '3.1'
+services:
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+    volumes:
+      - "${MYSQL_DATA_DIR}/:${MYSQL_CONTAINER_DATA_DIR}/:rw"
+      - "${MYSQL_ENTRYPOINT_DIR}/:${MYSQL_CONTAINER_ENTRYPOINT_DIR}/:ro"
+      - "${MYSQL_CONF_DIR}/:${MYSQL_CONTAINER_CONF_DIR}/:rw"

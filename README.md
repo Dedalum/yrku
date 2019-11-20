@@ -42,3 +42,4 @@ The database used is a MySQL DB running in a Docker container.
 
 ## TODO
 - check accesses to DB: more thorough restrictions
+- proper deployment (Ansible for instance)

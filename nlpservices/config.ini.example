@@ -1,0 +1,7 @@
+[DEFAULT]
+
+[mysql]
+host = localhost
+user = nlp-recommend
+password = example
+db = db1

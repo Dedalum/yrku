@@ -15,7 +15,12 @@ class Recommender:
     Recommender class for generating the LSI model and returning book 
     recommendations
     """
-    def __init__(self, data_dir="nlprecommend_data"):
+    def __init__(self,
+                 mysql_host,
+                 mysql_user,
+                 mysql_password,
+                 mysql_db,
+                 data_dir="nlprecommend_data"):
         """
         Args:
             data_dir (string): directory where the results are to be saved
@@ -41,9 +46,8 @@ class Recommender:
 
         self._create_data_dir()
 
-        self.mysqlcli = nlpservice.mysqlcli.Client("localhost",
-                                                   "nlp_recommend", "example",
-                                                   "db1")
+        self.mysqlcli = nlpservice.mysqlcli.Client(mysql_host, mysql_user,
+                                                   mysql_password, mysql_db)
 
     def _create_data_dir(self):
         """

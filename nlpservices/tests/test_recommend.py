@@ -29,7 +29,11 @@ class TestRecommender:
         it to files, then load it from the same files.
         """
         # pre-setup
-        recommender = nlpservice.recommend.Recommender(data_dir=self.data_dir)
+        recommender = nlpservice.recommend.Recommender("",
+                                                       "",
+                                                       "",
+                                                       "",
+                                                       data_dir=self.data_dir)
         recommender.pre_setup(docs=self.books)
 
         # Load from files pre-setup
@@ -40,7 +44,11 @@ class TestRecommender:
         Test finding the ideal number of topics to be used in our LSI model.
         """
         # pre-setup
-        recommender = nlpservice.recommend.Recommender(data_dir=self.data_dir)
+        recommender = nlpservice.recommend.Recommender("",
+                                                       "",
+                                                       "",
+                                                       "",
+                                                       data_dir=self.data_dir)
         recommender.pre_setup(docs=self.books)
 
         ideal_nb_topics = recommender.ideal_nb_topics(2, 15)
@@ -51,7 +59,11 @@ class TestRecommender:
         Test loading the LSI model, the vectors and the similarities matrix,
         saving it to files and then reload these from the same files.
         """
-        recommender = nlpservice.recommend.Recommender(data_dir=self.data_dir)
+        recommender = nlpservice.recommend.Recommender("",
+                                                       "",
+                                                       "",
+                                                       "",
+                                                       data_dir=self.data_dir)
         recommender.pre_setup(docs=self.books)
 
         recommender.setup()
@@ -59,7 +71,13 @@ class TestRecommender:
     def test_top_books(self):
 
         # Pre-setup, optimize the number of topics and final setup
-        recommender = nlpservice.recommend.Recommender(data_dir=self.data_dir)
+        # for the test, we do not use MySQL to load the data here so fill it
+        # with empty strings
+        recommender = nlpservice.recommend.Recommender("",
+                                                       "",
+                                                       "",
+                                                       "",
+                                                       data_dir=self.data_dir)
         recommender.pre_setup(docs=self.books)
         ideal_nb_topics = recommender.ideal_nb_topics(2, 15)
         recommender.setup(ideal_nb_topics)

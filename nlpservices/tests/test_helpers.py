@@ -24,5 +24,4 @@ def test_prefilter_data():
                                 ['complet', 'tale', 'poem']]
 
     filtered_titles = nlpservice.helpers.prefilter_data(titles)
-
     assert filtered_titles == expected_filtered_titles

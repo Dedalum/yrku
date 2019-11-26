@@ -7,13 +7,14 @@ from nltk.tokenize import RegexpTokenizer
 
 def prefilter_data(titles_list):
     """
-    Tokenize book titles, remove stop words, lemmetize. We assume text is in
-    English.
-    (TODO: replace the stemming)
+    Tokenize book titles with a stemmer, remove stop words, lemmetize. We
+    assume text is in English.
+
     Args
-        data: list of strings, list of book titles to filter
+        data (list of strings): list of book titles to filter
+
     Returns:
-        list of list of strings, the lemmetized and filtered titles
+        list of list of strings: the lemmetized and filtered titles
     """
 
     # intialise tokenizer, keep words only and remove digits

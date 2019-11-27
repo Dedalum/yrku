@@ -36,19 +36,20 @@ class Client():
             list of dicts: book titles and their authors
         """
 
-        try:
-            connection = pymysql.connect(
-                host=self.host,
-                user=self.user,
-                password=self.password,
-                db=self.database,
-                charset='utf8mb4',
-                cursorclass=pymysql.cursors.DictCursor)
+        connection = pymysql.connect(host=self.host,
+                                     user=self.user,
+                                     password=self.password,
+                                     db=self.database,
+                                     charset='utf8mb4',
+                                     cursorclass=pymysql.cursors.DictCursor)
 
+        try:
             with connection.cursor() as cursor:
                 sql = "SELECT `author`, `title` FROM `%s`" % table
                 cursor.execute(sql)
                 data = cursor.fetchall()
+                if data == ():
+                    warnings.warn("data returned is empty", UserWarning)
 
         except connection.Error as err:
             print(err)
@@ -70,15 +71,14 @@ class Client():
             list of dicts: books (ID, title, author)
         """
 
-        try:
-            connection = pymysql.connect(
-                host=self.host,
-                user=self.user,
-                password=self.password,
-                db=self.database,
-                charset='utf8mb4',
-                cursorclass=pymysql.cursors.DictCursor)
+        connection = pymysql.connect(host=self.host,
+                                     user=self.user,
+                                     password=self.password,
+                                     db=self.database,
+                                     charset='utf8mb4',
+                                     cursorclass=pymysql.cursors.DictCursor)
 
+        try:
             with connection.cursor() as cursor:
                 sql = "SELECT `title` FROM `%s` WHERE author='%s'" % (
                     table,
@@ -100,7 +100,7 @@ class Client():
 
         return data
 
-    def get_title_book(self, title, table="books"):
+    def get_book_row(self, title, table="books"):
         """
         Get the book row corresponding to the given title.
 
@@ -112,15 +112,14 @@ class Client():
             list of dicts: book row (ID, title, author)
         """
 
-        try:
-            connection = pymysql.connect(
-                host=self.host,
-                user=self.user,
-                password=self.password,
-                db=self.database,
-                charset='utf8mb4',
-                cursorclass=pymysql.cursors.DictCursor)
+        connection = pymysql.connect(host=self.host,
+                                     user=self.user,
+                                     password=self.password,
+                                     db=self.database,
+                                     charset='utf8mb4',
+                                     cursorclass=pymysql.cursors.DictCursor)
 
+        try:
             # TODO: check input string before passing it to the query?
             with connection.cursor() as cursor:
                 sql = "SELECT `*` FROM `%s` WHERE title='%s'" % (
@@ -143,3 +142,20 @@ class Client():
             connection.close()
 
         return data
+
+    def get_book_author(self, title):
+        """
+        Search for the author of a book.
+
+        Args:
+            title (string): title of the book
+
+        Returns:
+            string: the author of the book
+        """
+
+        book_row = self.get_book_row(title)
+        if len(book_row) < 1:
+            return ""
+
+        return book_row[0]["author"]

@@ -69,8 +69,8 @@ class TestClient:
     def test_bad_table(self):
         """Test with a bad table"""
         with pytest.raises(Exception):
-            self.mysql_client.get_title_book("The Murders in the Rue Morgue",
-                                             table="bad_table")
+            self.mysql_client.get_book_row("The Murders in the Rue Morgue",
+                                           table="bad_table")
 
     def test_bad_author(self):
         """
@@ -87,4 +87,23 @@ class TestClient:
         """
         with pytest.warns(UserWarning,
                           match=r"data returned is empty. Book .* not found"):
-            self.mysql_client.get_title_book("Från mars -79")
+            self.mysql_client.get_book_row("Från mars -79")
+
+    def test_get_book_author(self):
+        """
+        Test get the author of a book
+        """
+        author = self.mysql_client.get_book_author(
+            "The Murders in the Rue Morgue")
+
+        assert author == "Edgar Allan Poe"
+
+    def test_get_book_author_bad_title(self):
+        """
+        Test get the author of a book with a bad title
+        """
+        with pytest.warns(UserWarning,
+                          match=r"data returned is empty. Book .* not found"):
+            author = self.mysql_client.get_book_author(
+                "The Murders in the Rue Rainbow")
+            assert author == ""

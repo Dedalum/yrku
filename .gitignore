@@ -1,4 +1,7 @@
 *.swp
+*.pyc
+.venv/
 deploy/.env
 deploy/mysql/data
 deploy/mysql/entrypoint_scripts
+nlprecomend/config.ini

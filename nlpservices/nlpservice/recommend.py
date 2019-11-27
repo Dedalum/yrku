@@ -3,6 +3,7 @@ import errno
 import json
 import os
 import pickle
+import warnings
 
 import gensim
 
@@ -295,6 +296,8 @@ class Recommender:
             docs (list of strings): optional, pass the documents directly as 
             an arg instead of querying the DB
         """
+
+        print("Presetting...")
         self._load_docs(docs=docs)
         self._load_dictionary()
         self._load_corpus()
@@ -306,11 +309,13 @@ class Recommender:
         Args:
             nb_topics (int): number of topics for the LSI model
         """
+        print("Final setting up")
+
         self._load_lsi_model(nb_topics=nb_topics)
         self._load_vectors()
         self._load_similarities()
 
-    def top_books(self, doc, top_nb_docs=10):
+    def top_books(self, doc, use_author=False, top_nb_docs=10):
         """
         Get top most similar documents based on given document.
 
@@ -321,20 +326,56 @@ class Recommender:
         Returns:
             list of strings: top documents recommended
         """
-        doc_id = self.doc_to_id[doc]
+        if doc in self.doc_to_id:
+            doc_id = self.doc_to_id[doc]
+        else:
+            raise ValueError("book %s not found" % doc)
 
         similarities_vector = self.similarities.get_similarities(
             self.vectors[doc_id])
 
         # sort top `top_nb_docs` books following their degree of similarity
         # with our document and get their titles
+        # discard the first document of the list as it is the one we are
+        # comparing to
         top_books = []
         for book_id, weight in sorted(
                 enumerate(similarities_vector),
-                key=lambda weight: -weight[1])[0:top_nb_docs]:
+                key=lambda weight: -weight[1])[1:top_nb_docs + 1]:
+
             top_books.append((self.id_to_doc[book_id], weight.item()))
 
+        if use_author:
+            with warnings.catch_warnings() as w:
+                books = self._same_author_books(doc)
+                same_author = [(book, 0) for book in books]
+                top_books += same_author
+                print(w)
+
+            # TODO make sure we don't duplicate some titles...
+
         return top_books
+
+    def _same_author_books(self, title):
+        """
+        Search for books with the same author in the MySQL DB
+        
+        Args:
+            title (string): book title
+
+        Returns:
+            list of strings: the list of books with the same author
+        """
+        books = []
+        author = self.mysqlcli.get_book_author(title)
+        if author == "":
+            return books
+
+        books = self.mysqlcli.get_author_books(author)
+        books = [book["title"] for book in books]
+        books.remove(title)
+
+        return books
 
     def ideal_nb_topics(self, min_nb_topics, max_nb_topics):
         """
@@ -348,6 +389,9 @@ class Recommender:
         Returns:
             int: the ideal number of topics
         """
+
+        print("Calculating the ideal number of topics...")
+
         coherence_values = []
         model_list = []
 
@@ -380,6 +424,5 @@ class Recommender:
         Returns:
             string: top_books in JSON format
         """
-        books = [(book, weight) for book, weight in top_books]
 
-        return json.dumps(dict(books))
+        return json.dumps(dict(top_books))

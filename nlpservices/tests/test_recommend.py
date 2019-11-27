@@ -16,9 +16,10 @@ class TestRecommender:
 
     books = [
         'French cuisine', 'A tour around France',
-        'French literature, poems and other arts', 'Voltaire was French',
-        'Voltaire died in Sweden', 'Dragons are not big lizzards',
-        'Dragons and dungeons', 'Castles have dungeons, sometimes dragons'
+        'French literature, poems and other arts in 19th cent.',
+        'Voltaire was French', 'Voltaire died in Sweden',
+        'Dragons are not big lizzards', 'Dragons and dungeons',
+        'Castles have dungeons, sometimes dragons', 'Bear-man-pig-moose'
     ]
 
     data_dir = "test_nlprecommend_data"
@@ -69,7 +70,9 @@ class TestRecommender:
         recommender.setup()
 
     def test_top_books(self):
-
+        """
+        Test top books recommendation, using the title only
+        """
         # Pre-setup, optimize the number of topics and final setup
         # for the test, we do not use MySQL to load the data here so fill it
         # with empty strings
@@ -80,17 +83,20 @@ class TestRecommender:
                                                        data_dir=self.data_dir)
         recommender.pre_setup(docs=self.books)
         ideal_nb_topics = recommender.ideal_nb_topics(2, 15)
-        recommender.setup(ideal_nb_topics)
+        recommender.setup(nb_topics=ideal_nb_topics)
 
-        # search for top 5 most similar books to the title "The Murders in the
-        # Rue Morgue"
-        title = "Dragons and dungeons"
-        top_books = recommender.top_books(title)
+        title = "French literature, poems and other arts in 19th cent."
+        top_books = recommender.top_books(title, top_nb_docs=3)
 
         print("Top books for %s" % title)
         for book in top_books:
-            print("%s: %s" % (book[0], book[1]))
+            print(book)
 
+    def test_top_books_use_author(self):
+        """
+        Test top books recommendation, using the title and the author
+        """
+        # TODO
     @pytest.fixture(scope="session", autouse=True)
     def clean_up(self, request):
         def _end():

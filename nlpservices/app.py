@@ -52,7 +52,7 @@ def main():
     recommender.setup(nb_topics=ideal_nb_topics)
 
     app.config['RECOMMENDER'] = recommender
-    app.run()
+    app.run(host=config["app"]["host"])
 
 
 if __name__ == "__main__":

@@ -18,7 +18,7 @@ def prefilter_data(titles_list):
     """
 
     # intialise tokenizer, keep words only and remove digits
-    tokenizer = RegexpTokenizer(r'[A-Za-z]+')
+    tokenizer = RegexpTokenizer('\w+')
 
     # we use English stopwords
     en_stop = set(stopwords.words('english'))

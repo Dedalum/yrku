@@ -11,11 +11,13 @@ function print_info () {
 }
 
 function print_help () {
-    echo -e "Usage: ${0} <cmd>
+    echo -e "Usage: ${0} <cmd> [param]
 Commands:
-    clean_table         truncate table ${MYSQL_TABLE_NAME}
-    import_csv          import CSV book file ${BOOKS_CSV} in the 
-                        table ${MYSQL_TABLE_NAME}
+    clean_table                 truncate table ${MYSQL_TABLE_NAME}
+    import_csv                  import CSV book file ${BOOKS_CSV} in the 
+                                table ${MYSQL_TABLE_NAME}
+    select_all_books            select all books with admin user
+    select_author_books [param] select all books from author [param]
 "
 }
 
@@ -63,6 +65,17 @@ function select_all_books() {
         $MYSQL_DB_NAME"
 }
 
+function select_author_books() {
+    local author=${1}
+        
+    echo "SELECT title from ${MYSQL_TABLE_NAME} WHERE author='${author}'"
+
+    docker exec $DB_CONTAINER_NAME sh -c "mysql -u $MYSQL_ADMIN_USER \
+        -p$MYSQL_ADMIN_PASSWORD \
+        -e \"SELECT title from ${MYSQL_TABLE_NAME} WHERE author='${author}'\" \
+        $MYSQL_DB_NAME"
+}
+
 function main() {
     if [[ ! -f .env ]]; then
         print_err ".env missing in current dir"
@@ -89,6 +102,16 @@ function main() {
         ;;
     "select_all_books")
         select_all_books
+        ;;
+    "select_author_books")
+        if [[ -z ${2:-} ]]; then
+            print_err "Missing author name"
+            print_help
+            exit 1
+        fi
+        
+        author=${2}
+        select_author_books "${author}"
         ;;
     *)
         print_err "Bad command"

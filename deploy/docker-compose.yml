@@ -10,3 +10,12 @@ services:
       - "${MYSQL_DATA_DIR}/:${MYSQL_CONTAINER_DATA_DIR}/:rw"
       - "${MYSQL_ENTRYPOINT_DIR}/:${MYSQL_CONTAINER_ENTRYPOINT_DIR}/:ro"
       - "${MYSQL_CONF_DIR}/:${MYSQL_CONTAINER_CONF_DIR}/:rw"
+    ports:
+      - "3306:3306"
+  nlprecommend:
+    image: nlprecommend:latest
+    restart: always
+    ports:
+      - "80:5000"
+    volumes:
+      - "${NLPRECOMMEND_CONFIG_FILE}:/config.ini:ro"

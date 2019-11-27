@@ -28,12 +28,12 @@ class Recommender:
         """
         self.data_dir = data_dir
         self.corpus_filename = "%s/corpus.mm" % self.data_dir
-        self.dictionary_filename = "%s/dictionary" % self.data_dir
-        self.lsi_model_filename = "%s/lsi_model" % self.data_dir
+        self.dictionary_filename = "%s/docs.dictionary" % self.data_dir
+        self.lsi_model_filename = "%s/lsi_model.model" % self.data_dir
         self.doc_to_id_filename = "%s/doc_to_id" % self.data_dir
         self.id_to_doc_filename = "%s/id_to_doc" % self.data_dir
-        self.similarities_filename = "%s/similarities" % self.data_dir
-        self.vectors_filename = "%s/vectors" % self.data_dir
+        self.similarities_filename = "%s/docs.similarities" % self.data_dir
+        self.vectors_filename = "%s/docs.vectors" % self.data_dir
 
         self.docs = None
         self.docs_clean = None

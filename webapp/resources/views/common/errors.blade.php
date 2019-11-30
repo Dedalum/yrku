@@ -1,3 +1,5 @@
 <div class="">
-    <p>Error</p>
+    @foreach ($errors->all() as $error)
+        Error: {{ $error }}
+    @endforeach
 </div>

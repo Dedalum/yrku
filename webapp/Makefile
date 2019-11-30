@@ -4,9 +4,9 @@ VERSIONSTRING := $(shell git describe --long --tags --always) # --dirty=+M)
 all: help
 
 init: ## Install dependencies
-	#composer install
-	#npm install
-	#php artisan key:generate
+	composer install
+	npm install
+	php artisan key:generate
 
 test: ## Run tests
 

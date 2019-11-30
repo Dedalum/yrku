@@ -4,14 +4,68 @@
 
     <!-- Bootstrap Boilerplate... -->
 
-<div class="card border-light mb-3">
+    <div class="card border-light mb-3">
+        <!-- export button -->
+        <div class="dropdown">
+            <form action="/books" method="GET">
+                <fieldset class="form-group">
+                    <div class="row">
+                        <legend class="col-form-label col-sm-2 pt-0">Format</legend>
+                        <div class="col-sm-10">
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="format" id="exportCSV" value="csv" checked>
+                                <label class="form-check-label" for="exportCSV">
+                                    CSV format
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="format" id="exportXML" value="xml">
+                                <label class="form-check-label" for="exportXML">
+                                    XML format
+                                </label>
+                    
+                            </div>
+                        </div>    
+                    </div>
+                </fieldset>
+                <fieldset class="form-group">
+                    <div class="row">
+                        <legend class="col-form-label col-sm-2 pt-0">Filter out:</legend>
+                        <div class="col-sm-10">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="filter_out" id="filterOutNone" value="" checked>
+                                <label class="form-check-label" for="filterOutNone">
+                                    none
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="filter_out" id="filterOutTitle" value="title">
+                                <label class="form-check-label" for="filterOutTitle">
+                                    title
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="filter_out" id="filterOutAuthor" value="author">
+                                <label class="form-check-label" for="filterOutAuthor">
+                                    author
+                                </label>
+                            </div>
+                        </div>    
+                    </div>
+                </fieldset>
+                <div class="form-group row">
+                    <div class="col-sm-10">
+                        <button type="submit" class="btn btn-primary">Export</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
     <div class="card bg-light mb-3">
         <div class="card-body bg-light">
-            <!-- Display Validation Errors -->
-            <!-- @include('common.errors') -->
-
             <!-- New book Form -->
-            <form action="/book" method="POST">
+            <form action="/books" method="POST">
                 
                 {{ csrf_field() }}
 
@@ -44,17 +98,6 @@
     <!-- current books -->
     <div class="card border-light mb-3">
             
-        <!-- export button -->
-        <div class="dropdown">
-            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Export
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="/export?format=csv">CSV format</a>
-                <a class="dropdown-item" href="/export?format=xml">XML format</a>
-            </div>
-        </div>
-
 
         <!-- book list -->
         <div class="table-responsive">
@@ -70,13 +113,13 @@
                 <tbody>
                     @foreach ($books as $book)
                     <tr>
-                        <td>{{ $book->title}}</td>
+                        <td><a href="/book/{{ $book->id }}">{{ $book->title}}</a></td>
                         <td>{{ $book->author}}</td>
                         <!-- Delete Button -->
                         <td>
                             <form action="/book/{{ $book->id }}" method="POST">
                                 {{ csrf_field() }}
-                                {{ method_field('DELETE') }}
+                                @method('DELETE')
                         
                                 <button class="btn btn-primary"><i class="fa fa-trash"></i></button>
                             </form>
@@ -87,7 +130,11 @@
             </table>
         </div>
     </div>
-</div>
+
+    <!-- Display Validation Errors -->
+    @include('common.errors')
+
+    </div>
 
 @endsection
 

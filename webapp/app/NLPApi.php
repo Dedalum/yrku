@@ -4,14 +4,20 @@ namespace App;
 
 use App\Http\Resources\NLPDataCollection;
 use App\Http\Resources\NLPData;
+use Config;
 
 class NLPApi
 {
-    protected $url = 'http://localhost:5000';
+    protected $url;
+
+    public function __construct()
+    {
+        $this->url  =  config('nlp_api.host');
+    }
 
     public function recommend($title, $author=null)
     {
-        $books = collect($this->getJson($this->url . '/recommend/' . $title));
+        $books = collect($this->getJson($this->url . '/recommend/' . urlencode($title)));
         return NLPDataCollection::make($books)->resolve();
     }
 

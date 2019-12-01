@@ -34,7 +34,7 @@ services:
       - "${NGINX_LOG_DIR}/:${NGINX_CONTAINER_LOG_DIR}/:rw"
       - webapp_data:${WEBAPP_CONTAINER_DATA_DIR}/:ro
     ports:
-      - "8080:80"
+      - "80:80"
 
 volumes:
   webapp_data:

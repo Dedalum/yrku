@@ -54,8 +54,8 @@ function import_csv() {
         print_err "failed to load CSV into DB"
         exit 1
     fi
-    
-    rm "${MYSQL_ENTRYPOINT_DIR}/${BOOKS_CSV}" 
+
+    rm "${CONTAINER_BOOKS_CSV_PATH}" 
 }
 
 function select_all_books() {

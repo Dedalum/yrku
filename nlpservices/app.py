@@ -21,13 +21,13 @@ def recommend_handler(book_title):
         string: JSON list of top books recommended
     """
     try:
-        use_author = True if flask.request.args.get(
-            "use_author") == "true" else False
+        author = flask.request.args.get("author") if not None else None
         top_books = app.config["RECOMMENDER"].top_books(
-            flask.escape(book_title), use_author=use_author)
+            flask.escape(book_title), author=author)
     except Exception as err:
         return resource_not_found(err)
 
+    top_books = app.config["RECOMMENDER"].append_author(top_books)
     return nlpservice.recommend.Recommender.jsonify_recommender_result(
         top_books), 200
 

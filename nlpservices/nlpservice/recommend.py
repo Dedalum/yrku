@@ -315,7 +315,29 @@ class Recommender:
         self._load_vectors()
         self._load_similarities()
 
-    def top_books(self, doc, use_author=False, top_nb_docs=10):
+    def _vector(self, doc):
+        """
+        Lookup a doc if it has been vectorised and calculate it otherwise.
+
+        Args:
+            doc (string): the document
+
+        Returns:
+            vector
+        """
+        if doc in self.doc_to_id:
+            doc_id = self.doc_to_id[doc]
+            return self.vectors[doc_id]
+
+        prefiltered_doc = nlpservice.helpers.prefilter_data([doc])
+
+        if len(prefiltered_doc) != 1:
+            raise ValueError("error with vector for doc '%s'" % doc)
+
+        doc_bow = self.dictionary.doc2bow(prefiltered_doc[0])
+        return self.lsi_model[doc_bow]
+
+    def top_books(self, doc, author=None, top_nb_docs=10):
         """
         Get top most similar documents based on given document.
 
@@ -326,13 +348,9 @@ class Recommender:
         Returns:
             list of strings: top documents recommended
         """
-        if doc in self.doc_to_id:
-            doc_id = self.doc_to_id[doc]
-        else:
-            raise ValueError("book %s not found" % doc)
 
-        similarities_vector = self.similarities.get_similarities(
-            self.vectors[doc_id])
+        vector = self._vector(doc)
+        similarities_vector = self.similarities.get_similarities(vector)
 
         # sort top `top_nb_docs` books following their degree of similarity
         # with our document and get their titles
@@ -345,35 +363,52 @@ class Recommender:
 
             top_books.append((self.id_to_doc[book_id], weight.item()))
 
-        if use_author:
+        if author is not None:
             with warnings.catch_warnings() as w:
-                books = self._same_author_books(doc)
+                books = self._same_author_books(author)
                 same_author = [(book, 0) for book in books]
-                top_books += same_author
+                same_author += top_books
+                top_books = same_author
                 print(w)
-
-            # TODO make sure we don't duplicate some titles...
 
         return top_books
 
-    def _same_author_books(self, title):
+    def append_author(self, top_books):
+        """
+        Get the author's name for each book in the given list of titles.
+        
+        Args:
+            top_books (dict): titles and their weight
+            (result from top_books) to query for the author
+        
+        Returns:
+            dict: titles, their author, their weight
+        """
+        books = []
+        for title, weight in top_books:
+            author = self.mysqlcli.get_book_author(title)
+            if author == "":
+                author = "not_found"
+                warnings.warn(("author for title %s not found" % title),
+                              UserWarning)
+
+            books.append({'title': title, 'author': author, 'weight': weight})
+
+        return books
+
+    def _same_author_books(self, author):
         """
         Search for books with the same author in the MySQL DB
         
         Args:
-            title (string): book title
+            author (string): the author's name 
 
         Returns:
             list of strings: the list of books with the same author
         """
-        books = []
-        author = self.mysqlcli.get_book_author(title)
-        if author == "":
-            return books
-
         books = self.mysqlcli.get_author_books(author)
         books = [book["title"] for book in books]
-        books.remove(title)
+        # books.remove(title)
 
         return books
 
@@ -413,16 +448,15 @@ class Recommender:
         return ideal_nb_topics
 
     @staticmethod
-    def jsonify_recommender_result(top_books):
+    def jsonify_recommender_result(books):
         """
         Convert the recommender top_books method's result to a JSON string.
 
         Args:
-            top_books (list of key-value pair): the top books recommended by
-            the top_books method
+            books (dict): the top books recommended by the top_books method
 
         Returns:
-            string: top_books in JSON format
+            string: books in JSON format
         """
 
-        return json.dumps(dict(top_books))
+        return json.dumps(books)

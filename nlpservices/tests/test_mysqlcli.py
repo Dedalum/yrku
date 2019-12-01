@@ -66,12 +66,6 @@ class TestClient:
 
         self.mysql_client.database = "db1"
 
-    def test_bad_table(self):
-        """Test with a bad table"""
-        with pytest.raises(Exception):
-            self.mysql_client.get_book_row("The Murders in the Rue Morgue",
-                                           table="bad_table")
-
     def test_bad_author(self):
         """
         Test with a bad author (not found author). A warning should be triggered.

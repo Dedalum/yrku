@@ -21,7 +21,7 @@ services:
     image: webapp:latest
     restart: always
     volumes: 
-      - webapp_data:/var/www/:rw
+      - webapp_data:${WEBAPP_CONTAINER_DATA_DIR}/:rw
       - "${WEBAPP_DIR}/.env:/var/www/.env:ro"
       - "${WEBAPP_CONF_DIR}/nlp_api.php:/var/www/config/nlp_api.php:ro"
 
@@ -32,7 +32,7 @@ services:
       - "${NGINX_DIR}/nginx.conf:${NGINX_CONTAINER_DIR}/nginx.conf:ro"
       - "${NGINX_CONFD_DIR}/:${NGINX_CONTAINER_CONFD_DIR}/:ro"
       - "${NGINX_LOG_DIR}/:${NGINX_CONTAINER_LOG_DIR}/:rw"
-      - webapp_data:/var/www/:ro
+      - webapp_data:${WEBAPP_CONTAINER_DATA_DIR}/:ro
     ports:
       - "8080:80"
 

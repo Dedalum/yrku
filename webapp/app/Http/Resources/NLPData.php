@@ -16,7 +16,7 @@ class NLPData extends JsonResource
     {
         $res = [
             'title' => $this->resource->title,
-            'author' => $this->resource->author // TODO: if author==null ?
+            'author' => $this->resource->author
         ];
         return $res;
     }

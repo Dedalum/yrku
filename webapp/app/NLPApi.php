@@ -15,9 +15,13 @@ class NLPApi
         $this->url  =  config('nlp_api.host');
     }
 
-    public function recommend($title, $author=null)
+    public function recommend($title, $author)
     {
-        $books = collect($this->getJson($this->url . '/recommend/' . urlencode($title)));
+        if (is_null($author)) {
+            $books = collect($this->getJson($this->url . '/recommend/' . urlencode($title)));
+        } else {
+            $books = collect($this->getJson($this->url . '/recommend/' . urlencode("$title") . "?author=" . urlencode($author)));
+        }
         return NLPDataCollection::make($books)->resolve();
     }
 

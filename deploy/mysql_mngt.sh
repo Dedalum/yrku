@@ -13,22 +13,22 @@ function print_info () {
 function print_help () {
     echo -e "Usage: ${0} <cmd> [param]
 Commands:
-    clean_table                 truncate table ${MYSQL_TABLE_NAME}
+    clean_table                 truncate table ${MYSQL_NLP_SERVICES_TABLE_NAME}
     import_csv                  import CSV book file ${BOOKS_CSV} in the 
-                                table ${MYSQL_TABLE_NAME}
+                                table ${MYSQL_NLP_SERVICES_TABLE_NAME}
     select_all_books            select all books with admin user
     select_author_books [param] select all books from author [param]
 "
 }
 
 function clean_table() {
-    docker exec $DB_CONTAINER_NAME sh -c "mysql -u $MYSQL_ADMIN_USER \
-        -p$MYSQL_ADMIN_PASSWORD \
-        -e \"TRUNCATE TABLE ${MYSQL_TABLE_NAME}\" \
-        $MYSQL_DB_NAME"
+    docker exec $DB_CONTAINER_NAME sh -c "mysql -u $MYSQL_NLP_SERVICES_ADMIN_USER \
+        -p$MYSQL_NLP_SERVICES_ADMIN_PASSWORD \
+        -e \"TRUNCATE TABLE ${MYSQL_NLP_SERVICES_TABLE_NAME}\" \
+        $MYSQL_NLP_SERVICES_DB"
 
     if [[ $? -ne 0 ]]; then
-        print_err "failed to clean DB table ${MYSQL_TABLE_NAME}"
+        print_err "failed to clean DB table ${MYSQL_NLP_SERVICES_TABLE_NAME}"
         exit 1
     fi
 }
@@ -40,15 +40,15 @@ function import_csv() {
         exit 1
     fi
 
-    docker exec ${DB_CONTAINER_NAME} sh -c "mysql -u ${MYSQL_ADMIN_USER} \
-        -p${MYSQL_ADMIN_PASSWORD} \
+    docker exec ${DB_CONTAINER_NAME} sh -c "mysql -u ${MYSQL_NLP_SERVICES_ADMIN_USER} \
+        -p${MYSQL_NLP_SERVICES_ADMIN_PASSWORD} \
         --local-infile \
         -e \"LOAD DATA LOCAL INFILE '${CONTAINER_BOOKS_CSV_PATH}' \
-        INTO TABLE ${MYSQL_TABLE_NAME} \
+        INTO TABLE ${MYSQL_NLP_SERVICES_TABLE_NAME} \
         FIELDS TERMINATED BY ',' \
         ENCLOSED BY '\\\"' \
         LINES TERMINATED BY '\\n' \" \
-        ${MYSQL_DB_NAME}"
+        ${MYSQL_NLP_SERVICES_DB}"
 
     if [[ $? -ne 0 ]]; then
         print_err "failed to load CSV into DB"
@@ -59,21 +59,21 @@ function import_csv() {
 }
 
 function select_all_books() {
-    docker exec $DB_CONTAINER_NAME sh -c "mysql -u $MYSQL_ADMIN_USER \
-        -p$MYSQL_ADMIN_PASSWORD \
-        -e \"SELECT * from ${MYSQL_TABLE_NAME}\" \
-        $MYSQL_DB_NAME"
+    docker exec $DB_CONTAINER_NAME sh -c "mysql -u $MYSQL_NLP_SERVICES_ADMIN_USER \
+        -p$MYSQL_NLP_SERVICES_ADMIN_PASSWORD \
+        -e \"SELECT * from ${MYSQL_NLP_SERVICES_TABLE_NAME}\" \
+        $MYSQL_NLP_SERVICES_DB"
 }
 
 function select_author_books() {
     local author=${1}
         
-    echo "SELECT title from ${MYSQL_TABLE_NAME} WHERE author='${author}'"
+    echo "SELECT title from ${MYSQL_NLP_SERVICES_TABLE_NAME} WHERE author='${author}'"
 
-    docker exec $DB_CONTAINER_NAME sh -c "mysql -u $MYSQL_ADMIN_USER \
-        -p$MYSQL_ADMIN_PASSWORD \
-        -e \"SELECT title from ${MYSQL_TABLE_NAME} WHERE author='${author}'\" \
-        $MYSQL_DB_NAME"
+    docker exec $DB_CONTAINER_NAME sh -c "mysql -u $MYSQL_NLP_SERVICES_ADMIN_USER \
+        -p$MYSQL_NLP_SERVICES_ADMIN_PASSWORD \
+        -e \"SELECT title from ${MYSQL_NLP_SERVICES_TABLE_NAME} WHERE author='${author}'\" \
+        $MYSQL_NLP_SERVICES_DB"
 }
 
 function main() {

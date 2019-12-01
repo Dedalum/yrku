@@ -1,0 +1,11 @@
+[DEFAULT]
+
+[app]
+host=${NLP_SERVICE_HOST}
+
+[mysql]
+host = ${MYSQL_HOST}
+port = ${MYSQL_PORT}
+user = ${MYSQL_NLP_RECOMMEND_USER}
+password = ${MYSQL_NLP_RECOMMEND_PASSWORD}
+db = ${MYSQL_NLP_SERVICES_DB}

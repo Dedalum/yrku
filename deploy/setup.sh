@@ -16,11 +16,22 @@ function print_help () {
     echo -e "Deploy the project, running the commands in the order given bellow.
 Usage: ${0} <cmd> [param]
 Commands:
+    build_images    build nlprecommend and webapp images
     pre_setup       setup configs and start DB
     prepare_db      import training data to the DB
     start_all       start all services: nlrecommend, nginx, webapp
     setup_webapp    setup webapp: migrate tables   
 "
+}
+
+function build_images() {
+    print_info "dockerizing nlprecommend"
+    cd nlprecommend && make dockerize
+    cd ..
+    
+    print_info "dockerizing webapp"
+    cd webapp && make dockerize
+    cd ..
 }
 
 function pre_setup () {
@@ -82,6 +93,9 @@ function main() {
     local choice=${1}
 
     case ${choice} in
+    "build_images")
+        build_images
+        ;;
     "pre_setup")
         pre_setup
         print_info "Starting DB and setting configs"

@@ -1,0 +1,4 @@
+<?php
+return [
+    'host' => 'http://${NLP_CONTAINER_HOST}'
+];

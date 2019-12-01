@@ -95,6 +95,7 @@ class TestRecommender:
     def test_top_books_use_author(self):
         """
         Test top books recommendation, using the title and the author
+        Requires a MySQL DB running as we query the books and author from it.
         """
         # TODO
     @pytest.fixture(scope="session", autouse=True)

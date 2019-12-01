@@ -10,12 +10,31 @@ services:
       - "${MYSQL_DATA_DIR}/:${MYSQL_CONTAINER_DATA_DIR}/:rw"
       - "${MYSQL_ENTRYPOINT_DIR}/:${MYSQL_CONTAINER_ENTRYPOINT_DIR}/:ro"
       - "${MYSQL_CONF_DIR}/:${MYSQL_CONTAINER_CONF_DIR}/:rw"
-    ports:
-      - "3306:3306"
+
   nlprecommend:
     image: nlprecommend:latest
     restart: always
-    ports:
-      - "80:5000"
     volumes:
-      - "${NLPRECOMMEND_CONFIG_FILE}:/config.ini:ro"
+      - "${NLP_RECOMMEND_CONF_DIR}/config.ini:/config.ini:ro"
+
+  webapp:
+    image: webapp:latest
+    restart: always
+    volumes: 
+      - webapp_data:${WEBAPP_CONTAINER_DATA_DIR}/:rw
+      - "${WEBAPP_DIR}/.env:/var/www/.env:ro"
+      - "${WEBAPP_CONF_DIR}/nlp_api.php:/var/www/config/nlp_api.php:ro"
+
+  nginx:
+    image: nginx:1.10-alpine
+    restart: always
+    volumes:
+      - "${NGINX_DIR}/nginx.conf:${NGINX_CONTAINER_DIR}/nginx.conf:ro"
+      - "${NGINX_CONFD_DIR}/:${NGINX_CONTAINER_CONFD_DIR}/:ro"
+      - "${NGINX_LOG_DIR}/:${NGINX_CONTAINER_LOG_DIR}/:rw"
+      - webapp_data:${WEBAPP_CONTAINER_DATA_DIR}/:ro
+    ports:
+      - "80:80"
+
+volumes:
+  webapp_data:

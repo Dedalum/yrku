@@ -70,6 +70,7 @@ function setup_webapp () {
 
     print_info "Migrating..."
     docker-compose exec webapp bash -c "php artisan migrate"
+    docker-compose exec webapp bash -c "php artisan db:seed"
 }
 
 

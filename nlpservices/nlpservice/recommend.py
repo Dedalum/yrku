@@ -14,7 +14,7 @@ import nlpservice.mysqlcli
 class Recommender:
     """
     Recommender class for generating the LSI model and returning book 
-    recommendations
+    recommendations. 
     """
     def __init__(self,
                  mysql_host,
@@ -24,7 +24,11 @@ class Recommender:
                  data_dir="nlprecommend_data"):
         """
         Args:
-            data_dir (string): directory where the results are to be saved
+            mysql_host (str): the MySQL DB host
+            mysql_user (str): the MySQL user
+            mysql_password (str): the MySQL password for the given user
+            mysql_db (str): the database name to use
+            data_dir (str): directory where the results are to be saved
         """
         self.data_dir = data_dir
         self.corpus_filename = "%s/corpus.mm" % self.data_dir
@@ -69,7 +73,7 @@ class Recommender:
         passed.
 
         Args: 
-            docs (list of strings): optional, pass the documents directly as 
+            docs (list of str): optional, pass the documents directly as 
             an arg instead of querying the DB
         """
 
@@ -216,6 +220,11 @@ class Recommender:
     def _load_lsi_model(self, nb_topics=5):
         """
         Load LSI model from a file or generate it if the file does not exist
+
+        Args:
+            nb_topics (int): optional, the number of topics to generate. This
+            value should be determined to find its optimal value (the most 
+            meaningful).
         """
         if os.path.exists(self.lsi_model_filename):
             self.lsi_model = gensim.models.LsiModel.load(
@@ -290,10 +299,10 @@ class Recommender:
 
     def pre_setup(self, docs=None):
         """
-        Load the documents, the dictionary and the corpus
+        Load the documents, the dictionary and the corpus.
 
         Args:
-            docs (list of strings): optional, pass the documents directly as 
+            docs (list of str): optional, pass the documents directly as 
             an arg instead of querying the DB
         """
 
@@ -320,7 +329,7 @@ class Recommender:
         Lookup a doc if it has been vectorised and calculate it otherwise.
 
         Args:
-            doc (string): the document
+            doc (str): the document
 
         Returns:
             vector
@@ -342,11 +351,13 @@ class Recommender:
         Get top most similar documents based on given document.
 
         Args:
-            doc (string): document to be compared to
+            doc (str): document to be compared to
+            author (str): optional, if the author is set, use it to query 
+                for books from the same author as well
             top_nb_docs (int): the number of top documents to recommend
     
         Returns:
-            list of strings: top documents recommended
+            list of str: top documents recommended
         """
 
         vector = self._vector(doc)
@@ -401,10 +412,10 @@ class Recommender:
         Search for books with the same author in the MySQL DB
         
         Args:
-            author (string): the author's name 
+            author (str): the author's name 
 
         Returns:
-            list of strings: the list of books with the same author
+            list of str: the list of books with the same author
         """
         books = self.mysqlcli.get_author_books(author)
         books = [book["title"] for book in books]
@@ -450,13 +461,13 @@ class Recommender:
     @staticmethod
     def jsonify_recommender_result(books):
         """
-        Convert the recommender top_books method's result to a JSON string.
+        Convert the recommender top_books method's result to a JSON str.
 
         Args:
             books (dict): the top books recommended by the top_books method
 
         Returns:
-            string: books in JSON format
+            str: books in JSON format
         """
 
         return json.dumps(books)

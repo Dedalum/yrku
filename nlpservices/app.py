@@ -15,10 +15,10 @@ def recommend_handler(book_title):
     Look for a book recommendation based on the given book title.
 
     Args:
-        book_title (string): the title
+        book_title (str): the title
 
     Returns:
-        string: JSON list of top books recommended
+        str: JSON list of top books recommended
     """
     try:
         author = flask.request.args.get("author") if not None else None
@@ -39,7 +39,13 @@ def resource_not_found(err):
 
 
 def main():
-    """main function"""
+    """
+    main function: 
+    - starts an instance of the Recommend class and sets up the
+    LSI model to be used. It requires a MySQL DB to be running, filled with 
+    training data for preparing the model.
+    - once the recommender is set, start the server  
+    """
     config = configparser.ConfigParser()
     config.read("config.ini")
 
@@ -48,7 +54,7 @@ def main():
                                                    config["mysql"]["password"],
                                                    config["mysql"]["db"])
     recommender.pre_setup()
-    ideal_nb_topics = 13  # recommender.ideal_nb_topics(5, 15)
+    ideal_nb_topics = recommender.ideal_nb_topics(5, 15)
     recommender.setup(nb_topics=ideal_nb_topics)
 
     app.config['RECOMMENDER'] = recommender

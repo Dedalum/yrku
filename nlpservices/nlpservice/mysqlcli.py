@@ -32,6 +32,7 @@ class Client():
 
         Args:
             table (str): table to query the books from
+
         Returns:
             list of dicts: book titles and their authors
         """
@@ -68,7 +69,8 @@ class Client():
 
         Args:
             author (str): author name to search for
-            table (str): optional table to query from,
+            table (str): optional, table to query from,
+
         Returns:
             list of dicts: books (ID, title, author)
         """

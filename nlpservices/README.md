@@ -17,10 +17,23 @@ help                           Display this message
 ```
 
 ## Development
+
+### Setup
 In a virtualenv:
 ```
 pip install -r requirements.txt
 ```
+
+### API and recommend function
+
+The recommend function returns book recommendations based on a given title
+and optionally an author's name:
+
+1. Generate an LSI model, trained with data from a specific training list of 
+books in the DB
+2. Run the API (in Flask) and serve request for recommendations. Responses are 
+lists of book titles and their authors in JSON format.
+
 
 ## Usage
 
@@ -56,16 +69,11 @@ config.ini                  # configuration file
 
 ## TODO
 
-- `Wizard's First Rule (Sword of Truth, nb.1)` not found (although in DB)
-- remove possible duplicates in method `top_books` when we call it with 
-`use_author=True` 
-- deploy with Nginx, Gunicorn (instead of using the development Flask server)
 - add logger and add more error checks, warnings 
-- finish testing
+- deploy with Nginx, Gunicorn (instead of using the development Flask server)
  
-### Improvements
+### Ideas and improvements
 
-- load data safely ? precompute and push to specific DB ?
 - `pickle` python package not secure (only load trusted data - in our case, 
 to simplify, we'll assume our data is safe)
 - lemmatization (instead of stemming); see Krovetz stemmer/lemmetizer

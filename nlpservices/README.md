@@ -34,6 +34,26 @@ books in the DB
 2. Run the API (in Flask) and serve request for recommendations. Responses are 
 lists of book titles and their authors in JSON format.
 
+The API endpoint is:
+`GET /recommend/:book_title?author=:book_author`
+- `book_title`: the title to query for
+- `book_author`: an optional parameter, the author's name
+
+It returns:
+```json
+[
+    {
+        "title": "För levande och döda",
+        "author": "Thomas Tranströmer",
+        "weight": "0.5"
+    },
+    {
+        "title": "Voyage au bout de la nuit",
+        "author": "Louis-Ferdinand Céline",
+        "weight": "0.332"
+    }
+]
+```
 
 ## Usage
 
@@ -69,7 +89,7 @@ config.ini                  # configuration file
 
 ## TODO
 
-- add logger and add more error checks, warnings 
+- add logger and more error checks, warnings 
 - deploy with Nginx, Gunicorn (instead of using the development Flask server)
  
 ### Ideas and improvements

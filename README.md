@@ -63,3 +63,4 @@ database containing the books used for training the NLP LSI model used
 - Kubernetes instead of docker-compose
 - CI for tests, dockerizing (pushing to own docker hub) with TravisCI or 
 gitlab-CI for instance
+- Letsencrypt for nginx

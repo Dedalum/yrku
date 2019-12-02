@@ -42,13 +42,15 @@ class BookController extends Controller
                 $filename = "books.csv";
                 $handle = fopen(storage_path("app/public/$filename"), 'w+');
 
-                if ($request->query()['filter_out'] == 'author') {
+                if (array_key_exists('filter_out', $request->query()) and
+                        $request->query()['filter_out'] == 'author') {
                     $books = Book::select('title')->get();
                     fputcsv($handle, array('title'));
                     foreach ($books as $book) {
                         fputcsv($handle, array($book['title']));
                     }
-                } elseif ($request->query()['filter_out'] == 'title') {
+                } elseif (array_key_exists('filter_out', $request->query()) and
+                        $request->query()['filter_out'] == 'title') {
                     $books = Book::select('author')->get();
                     fputcsv($handle, array('author'));
                     foreach ($books as $book) {
@@ -81,14 +83,16 @@ class BookController extends Controller
                     $xml->startDocument('1.0');
                     $xml->startElement('books');
 
-                    if ($request->query()['filter_out'] == 'title') {
+                    if (array_key_exists('filter_out', $request->query()) and
+                            $request->query()['filter_out'] == 'title') {
                         $books = Book::select('author')->get();
                         foreach ($books as $book) {
                             $xml->startElement('book');
                             $xml->writeElement('AUTHOR', $book['author']);
                             $xml->endElement();
                         }
-                    } elseif ($request->query()['filter_out'] == 'author') {
+                    } elseif (array_key_exists('filter_out', $request->query()) and
+                            $request->query()['filter_out'] == 'author') {
                         $books = Book::select('title')->get();
                         foreach ($books as $book) {
                             $xml->startElement('book');
@@ -168,10 +172,14 @@ class BookController extends Controller
     public function show($id)
     {
         $book = Book::where('id', $id)->get();
-        return view(
-            'book',
-            ['book' => $book]
-        );
+        if (count($book) === 0) {
+            abort(404);
+        } else {
+            return view(
+                'book',
+                ['book' => $book]
+            );
+        }
     }
 
     /**

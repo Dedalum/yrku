@@ -18,7 +18,7 @@ the example file allow to run the stack without any changes.
 2. Run the script `setup.sh`:
     1. Build the Docker images: `./setup.sh build_images`
     2. Generate the configuration files and start the DB: `./setup pre_setup`
-    3. Wait 20 seconds until the DB is ready, then import the training the data
+    3. **Wait 20 seconds until the DB is ready**, then import the training the data
     `./setup.sh prepare_db`
     4. Start all other services: `./setup.sh start_all`
     5. Finally, setup the webapp: `./setup.sh setup_webapp`

@@ -55,4 +55,3 @@ return [
 
 - add login page and forbid guest users from adding and deleting books
  
-### Improvements

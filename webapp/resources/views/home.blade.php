@@ -1,9 +1,27 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="card border-light mb3">
-    <div class="card-body bg-light">
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">Dashboard</div>
+
+                <div class="card-body">
+                    @if (session('status'))
+                        <div class="alert alert-success" role="alert">
+                            {{ session('status') }}
+                        </div>
+                    @endif
+                    @auth
+                        You are logged in!
+                    @endauth
+                    @guest
+                        Not authenticated
+                    @endguest
+                </div>
+            </div>
+        </div>
     </div>
-    @include('common.errors')
 </div>
 @endsection

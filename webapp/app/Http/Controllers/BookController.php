@@ -11,6 +11,13 @@ class BookController extends Controller
 {
     protected $nlp_api;
 
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+
     /**
      * Display a listing of the books.
      * If a valid format (XML or CSV) is specified in the request query, return

@@ -59,7 +59,9 @@ class TestClient:
         assert books == self.expected_books
 
     def test_bad_db(self):
-        """Test with a bad DB"""
+        """
+        Test with a bad DB
+        """
         self.mysql_client.database = "bad_db"
         with pytest.raises(Exception):
             self.mysql_client.get_author_books(self.author)
@@ -68,7 +70,8 @@ class TestClient:
 
     def test_bad_author(self):
         """
-        Test with a bad author (not found author). A warning should be triggered.
+        Test with a bad author (not found author). 
+        A warning should be triggered.
         """
         with pytest.warns(
                 UserWarning,
@@ -77,7 +80,8 @@ class TestClient:
 
     def test_bad_title(self):
         """
-        Test with a bad title (book not found). A warning should be triggered.
+        Test with a bad title (book not found). 
+        A warning should be triggered.
         """
         with pytest.warns(UserWarning,
                           match=r"data returned is empty. Book .* not found"):
@@ -94,7 +98,8 @@ class TestClient:
 
     def test_get_book_author_bad_title(self):
         """
-        Test get the author of a book with a bad title
+        Test get the author of a book with a bad title.
+        A warning should be triggered.
         """
         with pytest.warns(UserWarning,
                           match=r"data returned is empty. Book .* not found"):

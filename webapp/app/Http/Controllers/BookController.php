@@ -9,9 +9,11 @@ use Illuminate\Support\Facades\Validator;
 
 class BookController extends Controller
 {
-    protected $nlp_api;
-
-
+    /**
+      * Create a new BookController
+      *
+      * @return void
+      */
     public function __construct()
     {
         $this->middleware('auth');
@@ -25,6 +27,7 @@ class BookController extends Controller
      * option.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
@@ -165,11 +168,9 @@ class BookController extends Controller
     public function show($id)
     {
         $book = Book::where('id', $id)->get();
-        //$recommended_books = $this->nlp_api->recommend($book[0]->title);
         return view(
             'book',
             ['book' => $book]
-        //    ['recommended_books' => $recommended_books]
         );
     }
 

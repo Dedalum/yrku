@@ -8,6 +8,18 @@ use Illuminate\Http\Request;
 
 class NLPApiController extends Controller
 {
+    /**
+     * Create a new NLPApiController
+     *
+     * @var App\NLPApi
+     */
+    protected $nlp_api;
+
+    /**
+     * Create a new NLPApiController
+     *
+     * @return void
+     */
     public function __construct()
     {
         $this->nlp_api = new NLPApi;

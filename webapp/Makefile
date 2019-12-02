@@ -6,9 +6,9 @@ all: help
 init: ## Install dependencies
 	composer install
 	npm install
-	php artisan key:generate
 
 test: ## Run tests
+	./vendor/bin/phpunit
 
 dockerize: ## Dockerize 
 	docker build . -t $(PROJECT_NAME):$(VERSIONSTRING) 

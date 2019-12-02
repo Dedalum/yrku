@@ -59,9 +59,9 @@ return [
 
 ## TODO
 
-- testing
+- more complete testing: the XML/CSV exports downloaded files have to be checked
+but cannot manage to get the downloaded file
+(`Storage::disk('local')->assertExists($dir)` gives no suche file in that path);
+see dusk tests
 
-### Ideas and improvments
 
-- add login page and forbid guest users from adding and deleting books
- 

@@ -11,6 +11,7 @@ class NLPApiController extends Controller
     public function __construct()
     {
         $this->nlp_api = new NLPApi;
+        $this->middleware('auth');
     }
 
     /**

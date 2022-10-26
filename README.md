@@ -1,4 +1,7 @@
-# Yaraku assignment
+# Yaraku
+
+Book recommendations given titles or authors app using NLP for the model and 
+Laravel framework for a basic website.
 
 ## Table of contents
 
